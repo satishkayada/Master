@@ -82,6 +82,11 @@ namespace master.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var db = new ApplicationDbContext();
+                    var Customer = new Customer() { Name = model.UserName, ApplicationUserId = user.Id };
+                    db.Customers.Add(Customer);
+                    db.SaveChanges();
+
                     await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
